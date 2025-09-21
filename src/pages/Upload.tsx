@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Upload as UploadIcon, Image, X, Camera } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import heroPlants from "@/assets/hero-plants.jpg";
 
 const Upload = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -58,14 +59,24 @@ const Upload = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-gradient-secondary">
-      <div className="container mx-auto px-6 py-12">
+    <div className="pt-20 min-h-screen relative overflow-hidden">
+      <div 
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${heroPlants})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          transform: 'scale(1.05)',
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-hero opacity-90" />
+      <div className="relative z-10 container mx-auto px-6 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-serif font-bold text-foreground mb-4">
+            <h1 className="text-4xl font-serif font-bold text-white mb-4">
               Upload Plant Image
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-white/90">
               Upload a clear image of the plant you want to identify and analyze
             </p>
           </div>

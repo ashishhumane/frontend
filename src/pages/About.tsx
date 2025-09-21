@@ -1,16 +1,27 @@
 import { Leaf, Clock, Heart, Shield } from "lucide-react";
+import heroPlants from "@/assets/hero-plants.jpg";
 
 const About = () => {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-secondary">
-        <div className="container mx-auto px-6 text-center">
+      <section className="relative py-20 overflow-hidden">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroPlants})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: 'scale(1.05)',
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-hero opacity-85" />
+        <div className="relative z-10 container mx-auto px-6 text-center">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-5xl font-serif font-bold text-foreground mb-6">
+            <h1 className="text-5xl font-serif font-bold text-white mb-6">
               About Ayurveda & Our Mission
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-white/90">
               Bridging ancient Ayurvedic wisdom with modern technology to make plant-based healing accessible to everyone
             </p>
           </div>

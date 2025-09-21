@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, MapPin, Send, MessageCircle, Leaf } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import heroPlants from "@/assets/hero-plants.jpg";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -33,8 +34,18 @@ const Contact = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-gradient-secondary">
-      <div className="container mx-auto px-6 py-12">
+    <div className="pt-20 min-h-screen relative overflow-hidden">
+      <div 
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${heroPlants})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          transform: 'scale(1.05)',
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-hero opacity-90" />
+      <div className="relative z-10 container mx-auto px-6 py-12">
         <div className="max-w-6xl mx-auto">
           
           {/* Header */}
@@ -42,10 +53,10 @@ const Contact = () => {
             <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-natural">
               <MessageCircle className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="text-4xl font-serif font-bold text-foreground mb-4">
+            <h1 className="text-4xl font-serif font-bold text-white mb-4">
               Get in Touch
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Have questions about Ayurvedic plants or need guidance? We're here to help you on your herbal journey.
             </p>
           </div>
