@@ -1,5 +1,5 @@
 import { Leaf, Clock, Heart, Shield } from "lucide-react";
-import heroPlants from "@/assets/hero-plants.jpg";
+import aboutHerbs from "@/assets/about-herbs.jpg";
 
 const About = () => {
   return (
@@ -9,7 +9,7 @@ const About = () => {
         <div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url(${heroPlants})`,
+            backgroundImage: `url(${aboutHerbs})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             transform: 'scale(1.05)',

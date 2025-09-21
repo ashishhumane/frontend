@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, MapPin, Send, MessageCircle, Leaf } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import heroPlants from "@/assets/hero-plants.jpg";
+import contactGarden from "@/assets/contact-garden.jpg";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ const Contact = () => {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundImage: `url(${heroPlants})`,
+          backgroundImage: `url(${contactGarden})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           transform: 'scale(1.05)',

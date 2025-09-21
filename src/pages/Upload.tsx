@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Upload as UploadIcon, Image, X, Camera } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import heroPlants from "@/assets/hero-plants.jpg";
+import analysisPlants from "@/assets/analysis-plants.jpg";
 
 const Upload = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -63,7 +63,7 @@ const Upload = () => {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundImage: `url(${heroPlants})`,
+          backgroundImage: `url(${analysisPlants})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           transform: 'scale(1.05)',
