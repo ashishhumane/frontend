@@ -1,30 +1,56 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Leaf, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import axios from 'axios'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here (would need Supabase integration)
-    console.log("Login attempt:", formData);
+
+    try {
+      setLoading(true);
+
+      // 👇 send login request to backend
+      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("✅ Login successful:", response.data);
+      alert("Login successful!");
+      navigate('/')
+
+      // Example: save JWT token in localStorage
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+    } catch (error: any) {
+      console.error("❌ Login failed:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-secondary flex items-center justify-center">
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-md mx-auto">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-natural">
@@ -40,7 +66,7 @@ const Login = () => {
 
           <Card className="p-8 shadow-card">
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               {/* Email Field */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
@@ -92,8 +118,8 @@ const Login = () => {
 
               {/* Forgot Password */}
               <div className="text-right">
-                <Link 
-                  to="/forgot-password" 
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-primary hover:text-primary/80 transition-colors"
                 >
                   Forgot your password?
@@ -101,8 +127,8 @@ const Login = () => {
               </div>
 
               {/* Submit Button */}
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow"
                 size="lg"
               >
@@ -115,8 +141,8 @@ const Login = () => {
               <div className="text-center">
                 <p className="text-muted-foreground">
                   Don't have an account?{" "}
-                  <Link 
-                    to="/register" 
+                  <Link
+                    to="/register"
                     className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
                     Create account

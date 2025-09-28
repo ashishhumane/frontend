@@ -3,8 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle, AlertTriangle, Leaf, Beaker, Clock, Link } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { useState,useEffect } from "react";
 
 const Results = () => {
+  const [imageUrl, setImageUrl] = useState("/placeholder.svg");
+
+  const location = useLocation();
+  const newplantData = location.state?.analysis.analysis;
+  // const uploadedFile = location.state?.uploadedFile.uploadedFile;
+
+  // console.log(newplantData && newplantData);
+  // console.log(uploadedFile && uploadedFile);
+
+  useEffect(() => {
+    // Only run once after the component mounts
+    const savedImage = localStorage.getItem("uploadedFileUrl");
+    if (savedImage) setImageUrl(savedImage);
+  }, []);
+  
   // Mock data for demonstration
   const plantData = {
     image: "/placeholder.svg", // This would be the uploaded image
@@ -50,7 +67,7 @@ const Results = () => {
             </h1>
             <div className="flex items-center justify-center text-muted-foreground">
               <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-              {plantData.confidence}% Confidence Match
+              {newplantData && newplantData.confidence}% Confidence Match
             </div>
           </div>
 
@@ -60,21 +77,21 @@ const Results = () => {
             <div className="lg:col-span-1">
               <Card className="p-6 sticky top-24">
                 <img
-                  src={plantData.image}
-                  alt={plantData.commonName}
+                  src={imageUrl}
+                  alt={newplantData && newplantData.commonName}
                   className="w-full h-64 object-cover rounded-lg shadow-card mb-6"
                 />
                 
                 <div className="space-y-4">
                   <div>
                     <h2 className="text-2xl font-serif font-bold text-foreground">
-                      {plantData.commonName}
+                      {newplantData && newplantData.commonName}
                     </h2>
                     <p className="text-lg font-medium text-primary italic">
-                      {plantData.scientificName}
+                      {newplantData && newplantData.scientificName}
                     </p>
                     <p className="text-muted-foreground">
-                      Ayurvedic Name: {plantData.ayurvedicName}
+                      Ayurvedic Name: {newplantData && newplantData.ayurvedicName}
                     </p>
                   </div>
 
@@ -82,11 +99,11 @@ const Results = () => {
                   
                   <div>
                     <p className="text-sm text-muted-foreground">Family</p>
-                    <p className="font-medium text-foreground">{plantData.family}</p>
+                    <p className="font-medium text-foreground">{newplantData && newplantData.family}</p>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {plantData.properties.map((property, index) => (
+                    {newplantData && newplantData.properties.map((property, index) => (
                       <Badge key={index} variant="outline" className="text-xs">
                         {property}
                       </Badge>
@@ -109,7 +126,7 @@ const Results = () => {
                 </div>
                 
                 <div className="grid gap-4">
-                  {plantData.uses.map((use, index) => (
+                  {newplantData && newplantData.uses.map((use, index) => (
                     <div key={index} className="flex items-start">
                       <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground">{use}</span>
@@ -131,21 +148,21 @@ const Results = () => {
                   <div className="space-y-4">
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Tea</h4>
-                      <p className="text-muted-foreground">{plantData.dosage.tea}</p>
+                      <p className="text-muted-foreground">{newplantData && newplantData.dosage.tea}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Powder</h4>
-                      <p className="text-muted-foreground">{plantData.dosage.powder}</p>
+                      <p className="text-muted-foreground">{newplantData && newplantData.dosage.powder}</p>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Extract</h4>
-                      <p className="text-muted-foreground">{plantData.dosage.extract}</p>
+                      <p className="text-muted-foreground">{newplantData && newplantData.dosage.extract}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Fresh Leaves</h4>
-                      <p className="text-muted-foreground">{plantData.dosage.fresh}</p>
+                      <p className="text-muted-foreground">{newplantData && newplantData.dosage.fresh}</p>
                     </div>
                   </div>
                 </div>
@@ -161,7 +178,7 @@ const Results = () => {
                 </div>
                 
                 <div className="space-y-3">
-                  {plantData.sideEffects.map((effect, index) => (
+                  {newplantData && newplantData.sideEffects.map((effect, index) => (
                     <div key={index} className="flex items-start">
                       <AlertTriangle className="h-5 w-5 text-orange-500 mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground">{effect}</span>
@@ -179,10 +196,10 @@ const Results = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:shadow-glow">
+                {/* <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:shadow-glow">
                   <Link className="h-5 w-5 mr-2" />
                   Save to Dashboard
-                </Button>
+                </Button> */}
                 <Button size="lg" variant="outline" onClick={() => window.history.back()}>
                   Analyze Another Plant
                 </Button>

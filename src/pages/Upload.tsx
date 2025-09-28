@@ -6,7 +6,8 @@ import { Upload as UploadIcon, Image, X, Camera } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import analysisPlants from "@/assets/analysis-plants.jpg";
-
+import axios from 'axios'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const Upload = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
@@ -42,25 +43,47 @@ const Upload = () => {
     URL.revokeObjectURL(previewUrl);
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!uploadedFile) return;
-    
+
     setIsAnalyzing(true);
     toast({
       title: "Analyzing plant...",
       description: "This may take a few moments",
     });
 
-    // Simulate analysis
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append("file", uploadedFile);
+
+      const res = await axios.post(`${BACKEND_URL}/api/analyse/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const fileUrl = URL.createObjectURL(uploadedFile);
+      localStorage.setItem("uploadedFileUrl", fileUrl);
+
+      console.log("Backend response:", res.data);
+
+      // navigate to results page with backend response
+      navigate("/results", { state: { analysis: res.data } });
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast({
+        title: "Upload failed",
+        description: "Something went wrong while analyzing the plant.",
+        variant: "destructive",
+      });
+    } finally {
       setIsAnalyzing(false);
-      navigate("/results");
-    }, 3000);
+    }
   };
 
   return (
     <div className="pt-20 min-h-screen relative overflow-hidden">
-      <div 
+      <div
         className="absolute inset-0"
         style={{
           backgroundImage: `url(${analysisPlants})`,
@@ -88,15 +111,14 @@ const Upload = () => {
                 <Camera className="h-6 w-6 mr-2 text-primary" />
                 Select Image
               </h2>
-              
+
               {!uploadedFile ? (
                 <div
                   {...getRootProps()}
-                  className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-300 ${
-                    isDragActive 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:border-primary hover:bg-primary/5"
-                  }`}
+                  className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-300 ${isDragActive
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary hover:bg-primary/5"
+                    }`}
                 >
                   <input {...getInputProps()} />
                   <UploadIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -146,7 +168,7 @@ const Upload = () => {
                 <Image className="h-6 w-6 mr-2 text-accent" />
                 Analysis
               </h2>
-              
+
               {!uploadedFile ? (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">

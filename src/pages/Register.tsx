@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,11 +7,15 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Leaf, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import axios from 'axios'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -19,25 +23,47 @@ const Register = () => {
     confirmPassword: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords don't match");
       return;
     }
+
     if (!agreedToTerms) {
       alert("Please agree to the terms and conditions");
       return;
     }
-    // Handle registration logic here (would need Supabase integration)
-    console.log("Registration attempt:", formData);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(`${BACKEND_URL}/api/auth/create`, {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Registration successful:", response.data);
+      alert("Registration successful!");
+      navigate('/')
+    } catch (error: any) {
+      console.error("Registration failed:", error.response?.data || error.message);
+      alert("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-secondary flex items-center justify-center">
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-md mx-auto">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-natural">
@@ -53,7 +79,7 @@ const Register = () => {
 
           <Card className="p-8 shadow-card">
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               {/* Full Name Field */}
               <div className="space-y-2">
                 <Label htmlFor="fullName" className="text-sm font-medium text-foreground">
@@ -174,8 +200,8 @@ const Register = () => {
               </div>
 
               {/* Submit Button */}
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow"
                 size="lg"
                 disabled={!agreedToTerms}
@@ -189,8 +215,8 @@ const Register = () => {
               <div className="text-center">
                 <p className="text-muted-foreground">
                   Already have an account?{" "}
-                  <Link 
-                    to="/login" 
+                  <Link
+                    to="/login"
                     className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
                     Sign in
